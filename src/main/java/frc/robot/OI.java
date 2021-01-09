@@ -25,8 +25,8 @@ public class OI extends SubsystemBase {
 
     }
     private void manualDrive(){
-        //TODO ADD CONTROLS
-        //TODO ADD SCALAR
+        //TODO ADD CONTROLS ONCE I GET ROBOT
+        //TODO ADD SCALAR ONCE I GET ROBOT
         drive.setSwerve(joy1.getRawAxis(1/*TODO CHANGE TO VERT LEFT*/), joy1.getRawAxis(5/*TODO CHANGE TO HORIZ LEFT*/), joy1.getRawAxis(4/*TODO CHANGE TO HORIZ RIGHT*/));
     }
     public void periodic(){

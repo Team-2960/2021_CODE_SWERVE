@@ -17,12 +17,11 @@ public class Swerve{
     private PIDController anglePID;
     private PIDController drivePID;
     private CANCoder angleEncoder;
-      public Swerve(int motorIdDrive,int motorIdAngle,int encoderID){//PASS IN THE CANSPARK MAXES objects and then just use them from the other spot
+      public Swerve(int motorIdDrive,int motorIdAngle,int encoderID, PIDController pidA, PIDController pidD){
         //TODO ADD OFFSET OF THE MOTOR SO ITS NOT ANNOYING
-        //TODO CHANGE TO PASS IN PID FOR ANGLE AND RATE
         angleEncoder = new CANCoder(encoderID);
-        drivePID = new PIDController(Constants.dP, Constants.dI, Constants.dD);
-        anglePID = new PIDController(Constants.aP, Constants.aI, Constants.aD);
+        drivePID = pidA;
+        anglePID = pidD;
         driveMotor = new CANSparkMax(motorIdDrive, MotorType.kBrushless);
         angleMotor = new CANSparkMax(motorIdAngle, MotorType.kBrushless);
       }
@@ -40,6 +39,12 @@ public class Swerve{
         double calcDriveSpeed = 0;
         //angle
         return calcDriveSpeed;
+      }
+      public double angleOffsetAnglePID(double angle, double offSet){
+        anglePIDCalcABS(angle);
+      }
+      public double angleOffsetDrivePID(double angle, double offSet){
+        anglePIDCalcABS(angle);
       }
       public double anglePIDCalc(double angle){
         double calcAngleSpeed = 0;

@@ -25,6 +25,14 @@ public class Drive extends SubsystemBase {
     private static double backLeftSwerveAngle;
     private static double backRightSwerveSpeed;
     private static double backRightSwerveAngle;
+    public static PIDController PIDDFL;
+    public static PIDController PIDAFL;
+    public static PIDController PIDDFR;
+    public static PIDController PIDAFR;
+    public static PIDController PIDDBL;
+    public static PIDController PIDABL;
+    public static PIDController PIDDBR;
+    public static PIDController PIDABR;
     Swerve frontLeft;
     Swerve frontRight;
     Swerve backRight;
@@ -37,10 +45,18 @@ public class Drive extends SubsystemBase {
         return drive;
       }
       public Drive(){
-         frontLeft = new Swerve(Constants.motorIdDriveFrontLeft, Constants.motorIdAngleFrontLeft, Constants.encoderIdFrontLeft);
-         frontRight = new Swerve(Constants.motorIdDriveFrontRight, Constants.motorIdAngleFrontRight, Constants.encoderIdFrontRight);
-         backRight = new Swerve(Constants.motorIdDriveBackRight, Constants.motorIdAngleBackRight, Constants.encoderIdBackRight);
-         backLeft = new Swerve(Constants.motorIdDriveBackLeft, Constants.motorIdAngleBackLeft, Constants.encoderIdBackLeft);
+         PIDDFL = new PIDController(Constants.dPFL, Constants.dIFL, Constants.dDFL);
+         PIDAFL = new PIDController(Constants.aPFL, Constants.aIFL, Constants.aDFL);
+         PIDDFR = new PIDController(Constants.dPFR, Constants.dIFR, Constants.dDFR);
+         PIDAFR = new PIDController(Constants.aPFR, Constants.aIFR, Constants.aDFR);
+         PIDDBL = new PIDController(Constants.dPBL, Constants.dIBL, Constants.dDBL);
+         PIDABL = new PIDController(Constants.aPBL, Constants.aIBL, Constants.aDBL);
+         PIDDBR = new PIDController(Constants.dPBR, Constants.dIBR, Constants.dDBR);
+         PIDABR = new PIDController(Constants.aPBR, Constants.aIBR, Constants.aDBR);
+         frontLeft = new Swerve(Constants.motorIdDriveFrontLeft, Constants.motorIdAngleFrontLeft, Constants.encoderIdFrontLeft, PIDDFL, PIDAFL);
+         frontRight = new Swerve(Constants.motorIdDriveFrontRight, Constants.motorIdAngleFrontRight, Constants.encoderIdFrontRight,PIDDFR, PIDAFR);
+         backRight = new Swerve(Constants.motorIdDriveBackRight, Constants.motorIdAngleBackRight, Constants.encoderIdBackRight, PIDDBL, PIDABL);
+         backLeft = new Swerve(Constants.motorIdDriveBackLeft, Constants.motorIdAngleBackLeft, Constants.encoderIdBackLeft, PIDDBR, PIDABR);
       }
       public void homeSwerve(){
         frontLeft.setSpeed(0, frontLeft.anglePIDCalcABS(Constants.flHome));
@@ -69,7 +85,11 @@ public class Drive extends SubsystemBase {
         backRightSwerveAngle = Math.atan2(B,D)*180/Math.PI;
         //SET ALL OF THE NUMBERS FOR THE SWERVE VARS
       }
-      //TODO SET SVWERVE TO VECTOR AND NOT INDIVIDUAL PARTS OF VECTOR CALL SET SWERVE 
+      public void setVector(double angle, double mag, double rotationVectorX){
+        double angleVX = Math.cos(angle) * mag;//TODO CHECK about RAD VS DEG
+        double angleVY = Math.sin(angle) * mag;
+        setSwerve(angleVX, angleVY, rotationVectorX);
+      } 
       public void periodic(){
         frontLeft.setSpeed(frontLeftSwerveSpeed, frontLeft.anglePIDCalc(frontLeftSwerveAngle));
         frontRight.setSpeed(frontRightSwerveSpeed, frontRight.anglePIDCalc(frontRightSwerveAngle));
